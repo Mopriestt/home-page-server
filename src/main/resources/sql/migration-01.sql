@@ -1,0 +1,12 @@
+CREATE DATABASE HOMEPAGE;
+
+USE HOMEPAGE;
+
+CREATE TABLE chat_threads(
+	thread_id INT NOT NULL AUTO_INCREMENT,
+    user_id INT NULL,
+	post_time DATETIME DEFAULT(UTC_TIMESTAMP) NOT NULL,
+    quote_id INT NULL,
+    message TEXT,
+    PRIMARY KEY(thread_id)
+);
