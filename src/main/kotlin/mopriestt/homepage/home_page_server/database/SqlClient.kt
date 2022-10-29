@@ -17,7 +17,7 @@ object SqlClient {
             val resultSet = statement.executeQuery(sql)
             val resultList = mutableListOf<T>()
             while (resultSet.next()) {
-                resultList += resultSetToModel<T>(resultSet)
+                resultList += resultSet.toModels<T>()
             }
             return resultList
         }
@@ -26,7 +26,8 @@ object SqlClient {
     fun update(sql: String) = connection.createStatement().use { it.executeUpdate(sql) }
 }
 
-inline fun <reified T> resultSetToModel(resultSet: ResultSet) : T {
+
+inline fun <reified T> ResultSet.toModels() : T {
     require(T::class.isData)
 
     val constructor= T::class.java.constructors.first()
@@ -34,7 +35,7 @@ inline fun <reified T> resultSetToModel(resultSet: ResultSet) : T {
     T::class.java.declaredFields.forEach {
         assert(it.declaredAnnotations.any { annotation -> annotation is Column })
 
-        args += resultSet.getObject(it.getDeclaredAnnotation(Column::class.java).columnLabel)
+        args += getObject(it.getDeclaredAnnotation(Column::class.java).columnLabel)
     }
     return constructor.newInstance(*args.toTypedArray()) as T
 }
