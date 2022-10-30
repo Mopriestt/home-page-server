@@ -2,11 +2,17 @@ package mopriestt.homepage.home_page_server
 
 import mopriestt.homepage.home_page_server.chatroom.ChatThreadModel
 import mopriestt.homepage.home_page_server.database.SqlClient
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class SqlClientTest {
+    @BeforeAll
+    fun setup() = SqlClient.initTestEnv()
+
     @Test
     fun testSqlClient() {
         SqlClient.update(SqlTest.DROP_TEST_TABLE)
