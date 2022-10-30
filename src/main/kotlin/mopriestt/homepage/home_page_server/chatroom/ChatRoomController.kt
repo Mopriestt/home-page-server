@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/chatroom")
 class ChatRoomController {
     private val gson = Gson()
-    val chats = mutableListOf<String>()
 
     @GetMapping
     fun getChatHistory(): String = gson.toJson(ChatroomRepository.fetchChatThreads())
 
     @PostMapping
-    fun postMessage(@RequestBody msg: String): List<String> {
-        return chats.apply { this += msg }
+    fun postChat(@RequestBody body: Map<String, Any>): String {
+        ChatroomRepository.insertChatThread(msg = body["message"] as String, quoteId = body["quote_id"] as Int?)
+        return gson.toJson(ChatroomRepository.fetchChatThreads())
     }
 }
