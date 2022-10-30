@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.RestController
 @CrossOrigin("*")
 @RequestMapping("/chatroom")
 class ChatRoomController {
-  private val gson = Gson()
-  val chats = mutableListOf<String>();
+    private val gson = Gson()
+    val chats = mutableListOf<String>()
 
-  @GetMapping
-  fun getChatHistory(): String = gson.toJson(ChatroomRepository.fetchChatThreads())
+    @GetMapping
+    fun getChatHistory(): String = gson.toJson(ChatroomRepository.fetchChatThreads())
 
-  @PostMapping
-  fun postMessage(@RequestBody msg: String): List<String> {
-    return chats.apply { this += msg }
-  }
+    @PostMapping
+    fun postMessage(@RequestBody msg: String): List<String> {
+        return chats.apply { this += msg }
+    }
 }
