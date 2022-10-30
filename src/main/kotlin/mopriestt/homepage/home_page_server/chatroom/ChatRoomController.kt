@@ -4,8 +4,8 @@ import com.google.gson.Gson
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -15,11 +15,13 @@ class ChatRoomController {
     private val gson = Gson()
 
     @GetMapping
-    fun getChatHistory(): String = gson.toJson(ChatroomRepository.fetchChatThreads())
+    fun getChatHistory(): String {
+        return gson.toJson(ChatroomRepository.fetchChatThreads())
+    }
 
     @PostMapping
-    fun postChat(@RequestBody body: Map<String, Any>): String {
-        ChatroomRepository.insertChatThread(msg = body["message"] as String, quoteId = body["quote_id"] as Int?)
+    fun postChat(@RequestParam body: Map<String, String?>): String {
+        ChatroomRepository.insertChatThread(msg = body["message"] as String, body["quote_id"]?.toInt())
         return gson.toJson(ChatroomRepository.fetchChatThreads())
     }
 }
