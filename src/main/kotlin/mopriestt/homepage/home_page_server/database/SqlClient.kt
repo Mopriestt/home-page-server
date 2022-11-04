@@ -4,17 +4,26 @@ import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.ResultSet
 
-private const val DATASOURCE_URL = "jdbc:mysql://localhost:3306/HOMEPAGE"
+const val DATASOURCE_URL = "jdbc:mysql://localhost:3306/HOMEPAGE"
 private const val TEST_DATASOURCE_URL = "jdbc:mysql://localhost:3306/HOMEPAGE_TEST"
-private const val USER_NAME = "root"
-private const val PWD = "123456"
+const val USER_NAME = "root"
+const val PWD = "123456"
 
 object SqlClient {
-    val connection: Connection = DriverManager.getConnection(DATASOURCE_URL, USER_NAME, PWD)
+    private var connectionInstance: Connection? = null
+
+    val connection: Connection
+        get() {
+            if (connectionInstance?.isValid(5) != true) {
+                connectionInstance = DriverManager.getConnection(DATASOURCE_URL, USER_NAME, PWD)
+            }
+            return connectionInstance!!
+        }
 
     var testConnection: Connection? = null
 
     inline fun <reified T> query(sql: String): List<T> {
+
         val statement = (testConnection ?: connection).createStatement()
         statement.use {
             val resultSet = statement.executeQuery(sql)
@@ -26,12 +35,11 @@ object SqlClient {
         }
     }
 
-    fun update(sql: String) =
-        (testConnection ?: connection).createStatement().use { it.executeUpdate(sql) }
+    fun update(sql: String) = (testConnection ?: connection).createStatement().use { it.executeUpdate(sql) }
 
     fun initTestEnv() {
-        testConnection = DriverManager.getConnection(TEST_DATASOURCE_URL, USER_NAME, PWD)
         connection.close()
+        testConnection = DriverManager.getConnection(TEST_DATASOURCE_URL, USER_NAME, PWD)
     }
 }
 
