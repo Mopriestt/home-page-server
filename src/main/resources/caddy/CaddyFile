@@ -1,0 +1,6 @@
+api.mopriestt.com:8443 {
+        tls F:\caddy\api.mopriestt.com_bundle.pem F:\caddy\api.mopriestt.com.key
+        encode gzip
+
+        reverse_proxy localhost:8080
+}
