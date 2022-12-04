@@ -24,7 +24,7 @@ class ConnectionLogController {
         try {
             val response = reader.city(ipAddress)
             val country = response.country.isoCode
-            val regions = response.subdivisions.joinToString(",") { it.name }
+            val regions = response.subdivisions.joinToString(",") { it.name }.ifEmpty { "null" }
             val city = response.city.name
             val latitude = response.location.latitude
             val longitude = response.location.longitude
