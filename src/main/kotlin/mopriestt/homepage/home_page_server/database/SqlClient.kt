@@ -54,3 +54,5 @@ inline fun <reified T> ResultSet.toModels(): T {
     }
     return constructor.newInstance(*args.toTypedArray()) as T
 }
+
+fun sanitizeSqlString(str: String) = str.replace("\\", "\\\\").replace("'", "\\'")

@@ -1,6 +1,7 @@
 package mopriestt.homepage.home_page_server.chatroom
 
 import mopriestt.homepage.home_page_server.database.SqlClient
+import mopriestt.homepage.home_page_server.database.sanitizeSqlString
 
 object ChatroomRepository {
     fun fetchChatThreads(): List<ChatThreadModel> {
@@ -9,12 +10,8 @@ object ChatroomRepository {
     }
 
     fun insertChatThread(msg: String, quoteId: Int? = null) {
-        val escapedMsg = washString(msg)
+        val escapedMsg = sanitizeSqlString(msg)
         val sql = "INSERT INTO chat_threads(quote_id,message) VALUES($quoteId, '$escapedMsg')"
         SqlClient.update(sql)
     }
-
-    private fun washString(msg: String) = msg
-        .replace("\\", "\\\\")
-        .replace("'", "\\'")
 }
