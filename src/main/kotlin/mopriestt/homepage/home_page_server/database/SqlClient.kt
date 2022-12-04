@@ -10,6 +10,8 @@ const val USER_NAME = "root"
 const val PWD = "123456"
 
 object SqlClient {
+    var testConnection: Connection? = null
+
     private var connectionInstance: Connection? = null
 
     val connection: Connection
@@ -20,10 +22,7 @@ object SqlClient {
             return connectionInstance!!
         }
 
-    var testConnection: Connection? = null
-
     inline fun <reified T> query(sql: String): List<T> {
-
         val statement = (testConnection ?: connection).createStatement()
         statement.use {
             val resultSet = statement.executeQuery(sql)
