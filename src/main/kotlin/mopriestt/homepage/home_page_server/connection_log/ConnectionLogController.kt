@@ -9,13 +9,23 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.io.File
+import java.lang.Exception
 import java.net.InetAddress
 
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/connection_log")
 class ConnectionLogController {
-    private final val database = ResourceUtils.getFile("classpath:GeoLite2-City.mmdb")
+    private final val database = try {
+        // For Jar
+        File("GeoLite2-City.mmdb").also {
+            if (!it.canRead()) throw Exception()
+        }
+    } catch (e: Exception) {
+        // For IDE develop
+        ResourceUtils.getFile("classpath:GeoLite2-City.mmdb")
+    }
     private final val reader = DatabaseReader.Builder(database).build()
 
     @PostMapping
